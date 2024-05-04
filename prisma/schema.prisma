@@ -1,0 +1,41 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model category {
+  id                                   BigInt     @id(map: "category_pkey1") @default(autoincrement())
+  created_at                           DateTime   @default(now()) @db.Timestamptz(6)
+  category                             String?    @unique @db.VarChar
+  products_products_categoryTocategory products[] @relation("products_categoryTocategory")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model gender {
+  id                               BigInt     @id(map: "category_pkey") @default(autoincrement())
+  created_at                       DateTime   @default(now()) @db.Timestamptz(6)
+  gender                           String     @db.VarChar
+  products_products_genderTogender products[] @relation("products_genderTogender")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model products {
+  id                                   BigInt    @id @default(autoincrement())
+  created_at                           DateTime  @default(now()) @db.Timestamptz(6)
+  name                                 String?   @db.VarChar
+  category                             BigInt?
+  gender                               BigInt?
+  promo                                Boolean?
+  favorite                             Boolean?
+  photo                                String?   @db.VarChar
+  category_products_categoryTocategory category? @relation("products_categoryTocategory", fields: [category], references: [id], onDelete: Cascade)
+  gender_products_genderTogender       gender?   @relation("products_genderTogender", fields: [gender], references: [id], onDelete: Cascade)
+}
